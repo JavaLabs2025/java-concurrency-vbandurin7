@@ -22,6 +22,10 @@ public class WaiterTask implements Callable<Boolean>, Comparable<WaiterTask> {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        int remainingPortions = portions.get();
+        if (remainingPortions % 5000 == 0) {
+            System.out.println("Portions left - " + remainingPortions);
+        }
         boolean result = portions.getAndDecrement() > 0;
         resultFuture.complete(result);
         return result;
@@ -30,5 +34,9 @@ public class WaiterTask implements Callable<Boolean>, Comparable<WaiterTask> {
     @Override
     public int compareTo(WaiterTask o) {
         return Integer.compare(this.eatenBefore, o.eatenBefore);
+    }
+
+    public int getEatenBefore() {
+        return eatenBefore;
     }
 }

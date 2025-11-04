@@ -18,7 +18,7 @@ public class Programmer extends Thread {
         this.id = id;
         this.spoonManager = manager;
         this.waiterService = waiterService;
-        this.hasPortion = true;
+        this.hasPortion = false;
     }
 
     @Override
@@ -26,6 +26,7 @@ public class Programmer extends Thread {
         while (!Thread.currentThread().isInterrupted()) {
             code();
 
+            hasPortion = requestFoodWithTimeout(eaten);
             if (!hasPortion) {
                 break;
             }
@@ -36,21 +37,28 @@ public class Programmer extends Thread {
             } finally {
                 spoonManager.releaseSpoons(id);
             }
-            try {
-                CompletableFuture<Boolean> getFoodFuture = waiterService.requestFood(eaten);
-                hasPortion = getFoodFuture.get(5, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            } catch (ExecutionException e) {
-                System.err.println("Waiter failed to bring new portion: " + e.getCause());
-                break;
-            } catch (TimeoutException e) {
-                System.err.println("No response from waiter");
-                break;
-            }
         }
         System.out.println("Programmer-" + id + " has eaten " + eaten + " portions");
+    }
+
+    public int getEaten() {
+        return eaten;
+    }
+
+    private boolean requestFoodWithTimeout(int eaten) {
+        try {
+            CompletableFuture<Boolean> getFoodFuture = waiterService.requestFood(eaten);
+            return getFoodFuture.get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (ExecutionException e) {
+            System.err.println("Waiter failed to bring new portion: " + e.getCause());
+            return false;
+        } catch (TimeoutException e) {
+            System.err.println("No response from waiter");
+            return false;
+        }
     }
 
     private void eat() {

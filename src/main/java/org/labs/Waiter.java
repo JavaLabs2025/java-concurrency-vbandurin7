@@ -7,17 +7,15 @@ public class Waiter extends Thread {
 
     private final int id;
     private final BlockingQueue<WaiterTask> taskQueue;
-    private boolean running;
 
     public Waiter(int id, BlockingQueue<WaiterTask> taskQueue) {
-        this.running = true;
         this.id = id;
         this.taskQueue = taskQueue;
     }
 
     @Override
     public void run() {
-        while (running && !Thread.currentThread().isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 WaiterTask task = taskQueue.poll(1, TimeUnit.SECONDS);
                 if (task != null) {
@@ -32,7 +30,6 @@ public class Waiter extends Thread {
     }
 
     public void stopWorking() {
-        this.running = false;
         this.interrupt();
     }
 }

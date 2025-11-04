@@ -3,8 +3,7 @@ package org.labs;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        startDinner(30, 20, 10000);
-        System.out.println(Runtime.getRuntime().availableProcessors());
+        startDinner(7, 2, 100000);
     }
 
     public static void startDinner(int progsCount, int waitersCount, int portions) throws InterruptedException {
@@ -13,16 +12,17 @@ public class Main {
         WaiterService waiterService = new WaiterService(waitersCount, portions);
         for (int i = 0; i < progsCount; i++) {
             programmers[i] = new Programmer(i, spoonManager, waiterService);
-        }
-        for (int i = 0; i < progsCount; i++) {
             programmers[i].start();
         }
 
+        int total = 0;
         for (int i = 0; i < progsCount; i++) {
             programmers[i].join();
+            total += programmers[i].getEaten();
         }
 
         waiterService.shutdown();
+        System.out.println("TOTAL EATEN " + total);
     }
 }
 
