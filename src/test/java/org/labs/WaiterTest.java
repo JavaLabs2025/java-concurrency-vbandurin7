@@ -24,6 +24,7 @@ public class WaiterTest {
         assertEquals(15, queue.take().getEatenBefore());
     }
 
+
     private WaiterTask createTask(int eatenBefore, AtomicInteger portions) {
         return new WaiterTask(eatenBefore, portions, new CompletableFuture<>());
     }
