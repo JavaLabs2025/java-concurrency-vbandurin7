@@ -1,10 +1,9 @@
 package org.labs;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class WaiterTask implements Callable<Boolean>, Comparable<WaiterTask> {
+public class WaiterTask implements Runnable, Comparable<WaiterTask> {
     private final int eatenBefore;
     private final AtomicInteger portions;
     private final CompletableFuture<Boolean> resultFuture;
@@ -16,7 +15,7 @@ public class WaiterTask implements Callable<Boolean>, Comparable<WaiterTask> {
     }
 
     @Override
-    public Boolean call() {
+    public void run() {
         try {
             Thread.sleep(TimeUtil.randomTime(TimeUtil.MIN_WAIT_TIME, TimeUtil.MAX_WAIT_TIME));
         } catch (InterruptedException e) {
@@ -28,7 +27,6 @@ public class WaiterTask implements Callable<Boolean>, Comparable<WaiterTask> {
         }
         boolean result = portions.getAndDecrement() > 0;
         resultFuture.complete(result);
-        return result;
     }
 
     @Override

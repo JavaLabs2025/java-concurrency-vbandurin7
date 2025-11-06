@@ -3,7 +3,7 @@ package org.labs;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        startDinner(7, 2, 100000);
+        startDinner(7, 2, 1000);
     }
 
     public static void startDinner(int progsCount, int waitersCount, int portions) throws InterruptedException {

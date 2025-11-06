@@ -19,7 +19,7 @@ public class Waiter extends Thread {
             try {
                 WaiterTask task = taskQueue.poll(1, TimeUnit.SECONDS);
                 if (task != null) {
-                    task.call();
+                    task.run();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

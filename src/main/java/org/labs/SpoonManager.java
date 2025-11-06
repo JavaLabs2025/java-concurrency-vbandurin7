@@ -3,13 +3,13 @@ package org.labs;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SpoonManager {
-    private final int resourceCount;
+    private final int spoonCount;
     private final ReentrantLock[] issued;
 
-    public SpoonManager(int resourceCount) {
-        this.resourceCount = resourceCount;
-        this.issued = new ReentrantLock[resourceCount];
-        for (int i = 0; i < resourceCount; i++) {
+    public SpoonManager(int spoonCount) {
+        this.spoonCount = spoonCount;
+        this.issued = new ReentrantLock[spoonCount];
+        for (int i = 0; i < spoonCount; i++) {
             issued[i] = new ReentrantLock();
         }
     }
@@ -32,6 +32,6 @@ public class SpoonManager {
     }
 
     private int leftSpoonIdx(int programmerId) {
-        return (programmerId + 1) % resourceCount;
+        return (programmerId + 1) % spoonCount;
     }
 }
